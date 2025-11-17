@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Comment;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class CommentPolicy
 {
@@ -20,7 +19,7 @@ class CommentPolicy
 
     public function create(User $user): bool
     {
-        return !is_null($user);
+        return ! is_null($user);
     }
 
     public function update(User $user, Comment $comment): bool

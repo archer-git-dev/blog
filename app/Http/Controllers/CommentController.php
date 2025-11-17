@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -23,7 +22,7 @@ class CommentController extends Controller
                     'user_id' => $data['user_id'],
                     'post_id' => $data['post_id'],
                 ]);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
 
@@ -49,7 +48,7 @@ class CommentController extends Controller
 
         try {
             $comment->update($request->validated());
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
 
@@ -68,7 +67,7 @@ class CommentController extends Controller
 
         try {
             $comment->delete();
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
 

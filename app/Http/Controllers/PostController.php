@@ -7,7 +7,6 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -18,6 +17,7 @@ class PostController extends Controller
     public function index(): View
     {
         $posts = Post::with(['user', 'comments.user'])->orderBy('created_at', 'desc')->get();
+
         return view('post.index', compact('posts'));
     }
 
@@ -25,6 +25,7 @@ class PostController extends Controller
     public function create(): View
     {
         $tags = Tag::all();
+
         return view('post.create', compact('tags'));
     }
 
@@ -47,15 +48,13 @@ class PostController extends Controller
                     'user_id' => auth()->id(),
                 ]);
 
-
             // Прикрепляем теги
             if ($request->has('tags')) {
                 $post->tags()->attach($data['tags']);
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
-
 
         return redirect()->route('post.index')->with('success', 'Post created successfully!');
     }
@@ -64,6 +63,7 @@ class PostController extends Controller
     public function show(int $postId): View
     {
         $post = Post::with('user')->findOrFail($postId);
+
         return view('post.show', compact('post'));
     }
 
@@ -92,7 +92,7 @@ class PostController extends Controller
 
         try {
             $data = $request->validated();
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
 
@@ -129,7 +129,7 @@ class PostController extends Controller
 
         try {
             $post->delete();
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
 

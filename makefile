@@ -12,3 +12,5 @@ up:
 	docker compose up -d
 down:
 	docker compose down
+code-style:
+	docker compose exec php-cli vendor/bin/pint --preset laravel

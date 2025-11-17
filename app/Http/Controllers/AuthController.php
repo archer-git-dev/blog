@@ -6,9 +6,9 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -40,6 +40,7 @@ class AuthController extends Controller
     {
         if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
+
             return redirect()->intended(route('post.index'));
         }
 

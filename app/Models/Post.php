@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string $img_src
- * @property integer $user_id
+ * @property int $user_id
  */
 class Post extends Model
 {

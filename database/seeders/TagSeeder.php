@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Enums\TagEnum;
 use App\Models\Tag;
-use App\TagEnum;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TagSeeder extends Seeder
@@ -17,8 +16,8 @@ class TagSeeder extends Seeder
         foreach (TagEnum::toArray() as $tagTitle) {
             Tag::query()
                 ->firstOrCreate([
-                    'title' => $tagTitle
-                 ]);
+                    'title' => $tagTitle,
+                ]);
         }
     }
 }
