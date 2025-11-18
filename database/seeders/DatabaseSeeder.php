@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Создаем теги если их нет
+        // При инициализации приложения
+        /*        // Создаем теги если их нет
         $this->call(TagSeeder::class);
         $tags = Tag::all();
 
@@ -51,6 +52,9 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Test User',
                 'password' => \Illuminate\Support\Facades\Hash::make('password'),
             ]
-        );
+        );*/
+
+        // Версии laravel - изучение api
+        $this->call(VersionSeeder::class);
     }
 }

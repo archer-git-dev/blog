@@ -42,3 +42,9 @@ Route::middleware('auth')->prefix('comment')->name('comment.')->group(function (
     Route::put('/{comment_id}', [CommentController::class, 'update'])->name('update');
     Route::delete('/{comment_id}', [CommentController::class, 'destroy'])->name('destroy');
 });
+
+
+// Будет выполняться при любом несуществующем url
+Route::fallback(function () {
+    var_dump('Hello World!');
+});
