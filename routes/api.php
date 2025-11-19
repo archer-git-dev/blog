@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ApiAuthController;
 use App\Http\Controllers\Api\VersionController;
+use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,5 +16,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Версии теперь защищены
     Route::get('/versions', [VersionController::class, 'index']);
-    Route::get('/versions/{version}', [VersionController::class, 'show']);
+    Route::get('/versions/{version_id}', [VersionController::class, 'show']);
+});
+
+
+Route::middleware(['auth:sanctum', 'check.role'])->prefix('versions')->name('version')->group(function () {
+    // Версии теперь защищены
+    Route::get('/', [VersionController::class, 'index']);
+    Route::get('/{version_id}', [VersionController::class, 'show']);
 });

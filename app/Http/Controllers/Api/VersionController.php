@@ -3,29 +3,28 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\VersionCollection;
+use App\Http\Resources\VersionResource;
 use App\Models\Version;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class VersionController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(): VersionCollection
     {
         $versions = Version::query()
             ->orderBy('release_date', 'desc')
             ->get();
 
-        return response()->json([
-            'data' => $versions,
-            'message' => 'Versions retrieved successfully'
-        ]);
+        return VersionCollection::make($versions);
     }
 
-    public function show(Version $version): JsonResponse
+    public function show(int $versionId): VersionResource
     {
-        return response()->json([
-            'data' => $version,
-            'message' => 'Version retrieved successfully'
-        ]);
+        $version = Version::query()
+            ->findOrFail($versionId);
+
+        return VersionResource::make($version);
     }
 }

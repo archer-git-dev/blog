@@ -13,7 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix: 'api/v1'
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'check.role' => \App\Http\Middleware\CheckRole::class,
+            // другие middleware...
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
