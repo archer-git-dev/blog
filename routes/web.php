@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Invoke\InvokeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,11 @@ Route::middleware('auth')->prefix('comment')->name('comment.')->group(function (
     Route::delete('/{comment_id}', [CommentController::class, 'destroy'])->name('destroy');
 });
 
+
+// Контроллер одного действия - invoke
+Route::middleware('auth')->group(function () {
+    Route::get('/invoke', InvokeController::class)->name('invoke');
+});
 
 // Будет выполняться при любом несуществующем url
 Route::fallback(function () {

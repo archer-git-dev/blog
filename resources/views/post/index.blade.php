@@ -5,7 +5,7 @@
 @section('content')
     <div class="posts-container">
         <div class="header-actions">
-            <h2>All Posts</h2>
+            <h2>All Posts - {{ $postCount }}</h2>
             <a href="{{ route('post.create') }}" class="btn">Create New Post</a>
         </div>
 

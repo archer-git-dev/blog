@@ -100,6 +100,7 @@
                     <p class="no-comments">No comments yet. Be the first to comment!</p>
                 @endforelse
             </div>
+            <div>All posts - {{ $postCount }}</div>
         </div>
     </div>
 @endsection
