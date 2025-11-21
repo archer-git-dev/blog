@@ -101,6 +101,7 @@
                 @endforelse
             </div>
             <div>All posts - {{ $postCount }}</div>
+            <div>{{ helloWorld() }}</div>
         </div>
     </div>
 @endsection
