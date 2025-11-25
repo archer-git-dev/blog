@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentCreated;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
@@ -16,12 +17,14 @@ class CommentController extends Controller
         $data['user_id'] = auth()->id();
 
         try {
-            Comment::query()
+            $comment = Comment::query()
                 ->create([
                     'text' => $data['text'],
                     'user_id' => $data['user_id'],
                     'post_id' => $data['post_id'],
                 ]);
+
+            event(new CommentCreated($comment));
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }

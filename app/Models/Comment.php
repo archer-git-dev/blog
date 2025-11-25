@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $user_id
  * @property int $post_id
+ * @property string $text
  */
 class Comment extends Model
 {
