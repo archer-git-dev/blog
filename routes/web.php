@@ -2,13 +2,14 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Email\EmailController;
 use App\Http\Controllers\Invoke\InvokeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return auth()->check()
-        ? redirect()->route('posts.index')
+        ? redirect()->route('post.index')
         : redirect()->route('login');
 })->name('home');
 
@@ -49,6 +50,9 @@ Route::middleware('auth')->prefix('comment')->name('comment.')->group(function (
 Route::middleware('auth')->group(function () {
     Route::get('/invoke', InvokeController::class)->name('invoke');
 });
+
+// Email
+Route::get('/send-welcome-email', [EmailController::class, 'sendWelcomeEmail']);
 
 // Будет выполняться при любом несуществующем url
 Route::fallback(function () {
