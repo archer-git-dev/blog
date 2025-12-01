@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\Email\EmailController;
 use App\Http\Controllers\Invoke\InvokeController;
 use App\Http\Controllers\PostController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', function () {
     return auth()->check()
@@ -46,13 +47,35 @@ Route::middleware('auth')->prefix('comment')->name('comment.')->group(function (
 });
 
 
+// Email верификация
+
+// Страница текстом, что нужно подтвердить e-mail
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+// Процесс верификации (подтверждения) e-mail
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect()->route('post.index');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+// Повторная отправка письма с подтверждением
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+//===========================
+
+
 // Контроллер одного действия - invoke
 Route::middleware('auth')->group(function () {
     Route::get('/invoke', InvokeController::class)->name('invoke');
 });
-
-// Email
-Route::get('/send-welcome-email', [EmailController::class, 'sendWelcomeEmail']);
 
 // Будет выполняться при любом несуществующем url
 Route::fallback(function () {

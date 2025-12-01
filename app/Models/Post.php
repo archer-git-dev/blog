@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property string $title
+ * @property string $description
  * @property string $img_src
  * @property int $user_id
  */

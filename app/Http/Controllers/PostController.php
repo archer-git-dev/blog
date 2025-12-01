@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostCreated;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
@@ -52,6 +53,9 @@ class PostController extends Controller
             if ($request->has('tags')) {
                 $post->tags()->attach($data['tags']);
             }
+
+            // Вызываем слушателей при событии создания
+            event(new PostCreated($post));
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }

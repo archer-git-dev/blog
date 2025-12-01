@@ -2,8 +2,7 @@
 
 use App\Http\Controllers\Api\ApiAuthController;
 use App\Http\Controllers\Api\VersionController;
-use App\Http\Middleware\CheckRole;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Email\EmailController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes - только логин
@@ -25,3 +24,6 @@ Route::middleware(['auth:sanctum', 'check.role'])->prefix('versions')->name('ver
     Route::get('/', [VersionController::class, 'index']);
     Route::get('/{version_id}', [VersionController::class, 'show']);
 });
+
+// Email
+Route::middleware('auth:sanctum')->get('/send-welcome-email', [EmailController::class, 'sendWelcomeEmail']);
