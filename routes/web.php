@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Invoke\InvokeController;
 use App\Http\Controllers\PostController;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -47,6 +49,11 @@ Route::middleware('auth')->prefix('comment')->name('comment.')->group(function (
 });
 
 
+// Админка
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/blog-stats', [AdminController::class, 'stats'])->name('stats');
+});
+
 // Email верификация
 
 // Страница текстом, что нужно подтвердить e-mail
@@ -70,6 +77,10 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 
 //===========================
+
+
+// Поиск
+Route::get('/search', [PostController::class, 'search'])->name('search');
 
 
 // Контроллер одного действия - invoke

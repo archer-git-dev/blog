@@ -75,6 +75,12 @@ services:
     - ./:/var/www
     working_dir: /var/www
     tty: true
+  redis:
+    image: redis:alpine
+    volumes:
+      - ./docker/redis/data:/data
+    ports:
+      - "6379:6379"
 
 volumes:
   database:

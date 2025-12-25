@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -y libmcrypt-dev libpng-dev mariadb-client
     libgd-dev \
     && docker-php-ext-install pdo_mysql
 
+RUN pecl install redis \
+    && docker-php-ext-enable redis
+
 RUN docker-php-ext-configure exif
 RUN docker-php-ext-install exif
 RUN docker-php-ext-enable exif

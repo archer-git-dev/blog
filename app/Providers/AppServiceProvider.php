@@ -2,22 +2,28 @@
 
 namespace App\Providers;
 
+use App\Contracts\Post\PostRepositoryContract;
+use App\Contracts\Post\PostServiceContract;
+use App\Contracts\Tag\TagRepositoryContract;
+use App\EventListeners\NewCommentEmailNotification;
 use App\EventListeners\SendEmailListener;
 use App\Events\CommentCreated;
-use App\EventListeners\NewCommentEmailNotification;
 use App\Events\PostCreated;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Observers\CommentObserver;
 use App\Policies\CommentPolicy;
 use App\Policies\PostPolicy;
+use App\Repositories\Post\PostRepository;
+use App\Repositories\Tag\TagRepository;
+use App\Services\Post\PostService;
 use App\View\PostComposer;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,7 +32,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(PostServiceContract::class, PostService::class);
+        $this->app->bind(PostRepositoryContract::class, PostRepository::class);
+
+        $this->app->bind(TagRepositoryContract::class, TagRepository::class);
     }
 
     /**

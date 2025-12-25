@@ -6,6 +6,7 @@ use App\Events\CommentCreated;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -25,6 +26,9 @@ class CommentController extends Controller
                 ]);
 
             event(new CommentCreated($comment));
+
+            // Чистим кэш для статистики
+            Cache::forget('blog.stats');
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
