@@ -14,3 +14,5 @@ down:
 	docker compose down
 code-style:
 	docker compose exec php-cli vendor/bin/pint --preset laravel
+redis-cli:
+	docker exec -it blog-redis-1 redis-cli

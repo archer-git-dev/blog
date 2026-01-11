@@ -5,6 +5,7 @@ namespace App\Repositories\Post;
 use App\Contracts\Post\PostRepositoryContract;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 readonly class PostRepository implements PostRepositoryContract
@@ -17,7 +18,9 @@ readonly class PostRepository implements PostRepositoryContract
 
     public function getAllPosts(): Collection
     {
-        return $this->post->with(['user', 'comments.user'])->orderBy('created_at', 'desc')->get();
+        return Cache::remember('posts:all', 60 * 60, function () {
+            return $this->post->with(['user', 'comments.user', 'tags'])->orderBy('created_at', 'desc')->get();
+        });
     }
 
     public function storePost(array $data): Post
