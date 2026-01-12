@@ -5,10 +5,11 @@ namespace App\Services\Post;
 use App\Contracts\Post\PostRepositoryContract;
 use App\Contracts\Post\PostServiceContract;
 use App\Contracts\Tag\TagRepositoryContract;
+use App\Dto\Post\CreatePostDto;
 use App\Events\PostCreated;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -35,16 +36,14 @@ readonly class PostService implements PostServiceContract
         return $this->tagRepository->getAllTags();
     }
 
-    public function store(array $data): void
+    public function store(CreatePostDto $createPostDto): void
     {
         // Обработка изображения
-        if (isset($data['image'])) {
-            $data['img_src'] = $data['image']->store('posts', 'public');
+        if (isset($createPostDto->image)) {
+            $createPostDto->imageSrc = $createPostDto->image->store('posts', 'public');
         }
 
-        $data['user_id'] = auth()->id();
-
-        $post = $this->postRepository->storePost($data);
+        $post = $this->postRepository->storePost($createPostDto);
 
         // Вызываем слушателей при событии создания
         event(new PostCreated($post));

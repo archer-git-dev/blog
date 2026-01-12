@@ -12,8 +12,8 @@
         <div class="posts-grid">
             @foreach($posts as $post)
                 <div class="post-card">
-                    @if($post->img_src)
-                        <img src="{{ Storage::url($post->img_src) }}" alt="{{ $post->title }}" class="post-image">
+                    @if($post->imgSrc)
+                        <img src="{{ $post->imgSrc }}" alt="{{ $post->title }}" class="post-image">
                     @endif
                     <div class="post-content">
                         <h3>
@@ -21,10 +21,10 @@
                                 {{ $post->title }}
                             </a>
                         </h3>
-                        <p class="post-description">{{ Str::limit($post->description, 100) }}</p>
-                        <p class="post-author">By: {{ $post->user->name }} • {{ $post->created_at->format('M d, Y') }}</p>
+                        <p class="post-description">{{ $post->description }}</p>
+                        <p class="post-author">By: {{ $post->authorName }} • {{ $post->createdAt }}</p>
 
-                        @if($post->tags->count() > 0)
+                        @if(count($post->tags) > 0)
                             <div class="post-tags">
                                 @foreach($post->tags as $tag)
                                     <span class="tag">{{ $tag->title }}</span>

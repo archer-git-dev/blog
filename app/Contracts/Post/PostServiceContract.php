@@ -2,10 +2,11 @@
 
 namespace App\Contracts\Post;
 
+use App\Dto\Post\CreatePostDto;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -16,7 +17,7 @@ interface PostServiceContract
 
     public function create(): Collection;
 
-    public function store(array $data): void;
+    public function store(CreatePostDto $createPostDto): void;
 
     public function show(int $postId): Post;
 

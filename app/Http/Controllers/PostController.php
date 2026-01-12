@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Post\PostServiceContract;
+use App\Dto\Post\CreatePostDto;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Http\RedirectResponse;
@@ -39,7 +40,14 @@ class PostController extends Controller
     {
         $data = $request->validated();
 
-        $this->postService->store($data);
+        $this->postService->store(new CreatePostDto(
+            title: $data['title'],
+            description: $data['description'],
+            image: $data['image'],
+            imageSrc: null,
+            tags: $data['tags'],
+            authorId: auth()->id()
+        ));
 
         return redirect()->route('post.index')->with('success', 'Post created successfully!');
     }

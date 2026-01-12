@@ -3,8 +3,10 @@
 namespace App\Repositories\Post;
 
 use App\Contracts\Post\PostRepositoryContract;
+use App\Dto\Post\CreatePostDto;
+use App\Dto\Post\PostIndexDto;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 readonly class PostRepository implements PostRepositoryContract
@@ -17,25 +19,31 @@ readonly class PostRepository implements PostRepositoryContract
 
     public function getAllPosts(): Collection
     {
-        return $this->post->with(['user', 'comments.user'])->orderBy('created_at', 'desc')->get();
+        $posts = Post::query()
+            // Обязательно грузим связи, иначе будет N+1
+            ->with(['user', 'tags', 'comments.user'])
+            ->latest()
+            ->get();
+
+        return $posts->map(fn(Post $post) => PostIndexDto::fromModel($post));
     }
 
-    public function storePost(array $data): Post
+    public function storePost(CreatePostDto $createPostDto): Post
     {
         // Используем транзакцию: если теги не привяжутся, пост тоже не создастся
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($createPostDto) {
 
             // 1. Создаем сам пост
             $post = $this->post->query()->create([
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'img_src' => $data['img_src'],
-                'user_id' => $data['user_id'],
+                'title' => $createPostDto->title,
+                'description' => $createPostDto->description,
+                'img_src' => $createPostDto->imageSrc,
+                'user_id' => $createPostDto->authorId,
             ]);
 
             // 2. Привязываем теги (если они есть)
-            if (!empty($data['tags'])) {
-                $post->tags()->attach($data['tags']);
+            if (!empty($createPostDto->tags)) {
+                $post->tags()->attach($createPostDto->tags);
             }
 
             return $post;
