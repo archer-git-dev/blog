@@ -6,7 +6,8 @@ use App\Contracts\Post\PostRepositoryContract;
 use App\Dto\Post\CreatePostDto;
 use App\Dto\Post\PostIndexDto;
 use App\Models\Post;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 readonly class PostRepository implements PostRepositoryContract
@@ -19,19 +20,21 @@ readonly class PostRepository implements PostRepositoryContract
 
     public function getAllPosts(): Collection
     {
-        $posts = Post::query()
-            // Обязательно грузим связи, иначе будет N+1
-            ->with(['user', 'tags', 'comments.user'])
-            ->latest()
-            ->get();
+        return Cache::remember('posts:all', 60 * 60, function () {
+            $posts = Post::query()
+                // Обязательно грузим связи, иначе будет N+1
+                ->with(['user', 'tags', 'comments.user'])
+                ->latest()
+                ->get();
 
-        return $posts->map(fn(Post $post) => PostIndexDto::fromModel($post));
+            return $posts->map(fn(Post $post) => PostIndexDto::fromModel($post));
+        });
     }
 
     public function storePost(CreatePostDto $createPostDto): Post
     {
         // Используем транзакцию: если теги не привяжутся, пост тоже не создастся
-        return DB::transaction(function () use ($createPostDto) {
+        return DB::transaction(function () use ($data) {
 
             // 1. Создаем сам пост
             $post = $this->post->query()->create([

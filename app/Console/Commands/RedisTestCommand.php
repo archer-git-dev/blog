@@ -2,32 +2,34 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Comment;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
-class DeleteComments extends Command
+class RedisTestCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:delete-comments';
+    protected $signature = 'redis:go';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Delete all comments where text < 3 symbols';
+    protected $description = 'Command description';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        Comment::query()
-            ->whereRaw('LENGTH(text) < 3')
-            ->delete();
+        Cache::put('name', 'Islam');
+        Cache::forget('name');
+        $name = Cache::get('name');
+
+        dd($name);
     }
 }

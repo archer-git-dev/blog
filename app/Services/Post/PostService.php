@@ -48,6 +48,9 @@ readonly class PostService implements PostServiceContract
         // Вызываем слушателей при событии создания
         event(new PostCreated($post));
 
+        // Чистим кеш для всех постов
+        Cache::forget('posts:all');
+
         // Чистим кэш для статистики
         Cache::forget('blog.stats');
     }
@@ -86,6 +89,9 @@ readonly class PostService implements PostServiceContract
         }
 
         $this->postRepository->update($data);
+
+        // Чистим кеш для всех постов
+        Cache::forget('posts:all');
     }
 
     public function destroy(int $postId): void
@@ -101,6 +107,9 @@ readonly class PostService implements PostServiceContract
         }
 
         $this->postRepository->destroy($postId);
+
+        // Чистим кеш для всех постов
+        Cache::forget('posts:all');
     }
 
     public function search(string $searchQuery): Collection
