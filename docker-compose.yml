@@ -25,11 +25,16 @@ services:
     environment:
       - "DB_PORT=3306"
       - "DB_HOST=mysql"
+
       - "REDIS_PORT=6379"
       - "REDIS_HOST=redis"
+
+      - "RABBITMQ_HOST=rabbitmq"
+      - "RABBITMQ_PORT=5672"
     links:
       - mysql
       - node
+      - rabbitmq
 
   php-cli:
     build:
@@ -41,8 +46,10 @@ services:
       - "DB_PORT=3306"
       - "DB_HOST=mysql"
       - "COMPOSER_MEMORY_LIMIT=-1"
+      - "RABBITMQ_HOST=rabbitmq"
     links:
       - mysql
+      - rabbitmq
     tty: true
 
   mysql:
@@ -81,6 +88,16 @@ services:
       - ./docker/redis/data:/data
     ports:
       - "6379:6379"
-
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: secret
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./docker/rabbitmq/data:/var/lib/rabbitmq
 volumes:
   database:

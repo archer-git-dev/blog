@@ -6,7 +6,7 @@ use App\Contracts\Post\PostRepositoryContract;
 use App\Dto\Post\CreatePostDto;
 use App\Dto\Post\PostIndexDto;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -34,7 +34,7 @@ readonly class PostRepository implements PostRepositoryContract
     public function storePost(CreatePostDto $createPostDto): Post
     {
         // Используем транзакцию: если теги не привяжутся, пост тоже не создастся
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($createPostDto) {
 
             // 1. Создаем сам пост
             $post = $this->post->query()->create([
