@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\CommentCreated;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
+use App\Services\RabbitMQService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
@@ -74,6 +75,12 @@ class CommentController extends Controller
 
         try {
             $comment->delete();
+
+            $message = json_decode($comment, true);
+
+            $service = new RabbitMQService();
+            $service->publish('comment_events', 'comment.deleted', $message);
+
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }

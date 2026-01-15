@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Models\Comment;
 use App\Models\User;
 
@@ -24,11 +25,11 @@ class CommentPolicy
 
     public function update(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id;
+        return $user->id === $comment->user_id || $user->role === RoleEnum::ADMIN->value;
     }
 
     public function delete(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id;
+        return $user->id === $comment->user_id || $user->role === RoleEnum::ADMIN->value;
     }
 }
